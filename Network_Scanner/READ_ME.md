@@ -1,3 +1,5 @@
+NETWORK SCANNER
+-----------------------------------------------------------------------------------------------------------------------
 Created a Network_Scanner program using pythons scapy module
 
 -Rather then using builtin functions, utilized scapy to scan local networks to collect and store ips and mac addresses
@@ -5,7 +7,9 @@ Created a Network_Scanner program using pythons scapy module
 
 ------------------------------------------------------------------------------------------------------------------------
 -Scapy is a packet manipulation tool for computer networks.
+
 -It can forge or decode packets, send them on the wire, capture them, and match requests and replies.
+
 -It can also handle tasks like scanning, tracerouting, probing, unit tests, attacks, and network discovery.
 ------------------------------------------------------------------------------------------------------------------------
 USED ARGUMENT PARSER:
