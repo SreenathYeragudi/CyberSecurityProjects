@@ -35,7 +35,7 @@ def printer(result_lists):
     for client in result_lists :
         print(client["ip"]+"\t\t"+client["mac"])
 
-opts=get_args
+opts=get_args()
 scan_list=scan(opts.target)
 printer(scan_list)
 #this will search all ip's in the subnet
