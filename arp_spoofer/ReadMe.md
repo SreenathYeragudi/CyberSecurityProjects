@@ -36,24 +36,26 @@ CODE AND TOOLS OVERVIEW:
 ------------------------
   Methods:
   
-  spoof(target_ip,spoof_ip): Method that creates a spoof packet and sends it to other machine
-  
-  getMAC(ip): Get any MAC address passed an IP
-  
-  dynamicPrint(count):Allows for Dynamic Printing functionality in the project
-  
-  restore(dest_ip,src_ip): Restores orignal values (used in the try catch)
-  
-  spoofRepeat(boolT): Repeats spoof multiple times passing it to machine
-  
+      spoof(target_ip,spoof_ip): Method that creates a spoof packet and sends it to other machine
+
+      getMAC(ip): Get any MAC address passed an IP
+
+      dynamicPrint(count):Allows for Dynamic Printing functionality in the project
+
+      restore(dest_ip,src_ip): Restores orignal values (used in the try catch)
+
+      spoofRepeat(boolT): Repeats spoof multiple times passing it to machine
+
   TOOLS:
     -Utilized Virtual Box:
       ->Kali Machine (Hacker)
       ->Windows 10 Machine(Victim)
+      
     -Utilized Python Methods:
       ->Scapy:Scapy is a packet manipulation tool for computer networks
       ->Time
       ->Sys
+      
     -Utilized buffers for Dynamic Printing
       
 
