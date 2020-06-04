@@ -7,16 +7,19 @@ MAIN IDEA OF THE PROJECT:
 To create a spoofer that can intercept request and responses between a machine and a router using the ARP protocol
 
 PURPOSE:
+
 Intercept the request and responses from the "victim" machine using a "man in the middle" attack.
 -Allows us to monitor what is being done on the vicitim machine
 -Allow us to dictate actions to take on the victim machine
 -Allows us to send trojans or other attacks by acting as the router
 
 ARP Protocol (Address Resolution Protocol):
+
 communication protocol used for discovering the link layer address, such as a MAC address, 
 associated with a given internet layer address, typically an IPv4 address
 
 WHAT WE DID:
+
 -Sent a response to the router or gateway, impersonating the victim machine, forcing the router to update its
 ARP Logs with the Hackers MAC Address
 
@@ -24,7 +27,9 @@ ARP Logs with the Hackers MAC Address
 while impersonating the router with its IP
 
 WHY DO WE DO THIS:
+
 ARP has some security issues:
+
 1.Clients can accept responses even if they did not send a request
   - This allows us to access a clients vunerability
   
@@ -47,6 +52,7 @@ CODE AND TOOLS OVERVIEW:
       spoofRepeat(boolT): Repeats spoof multiple times passing it to machine
 
   TOOLS:
+  
     -Utilized Virtual Box:
       ->Kali Machine (Hacker)
       ->Windows 10 Machine(Victim)
