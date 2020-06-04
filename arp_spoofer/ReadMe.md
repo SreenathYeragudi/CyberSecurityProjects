@@ -1,6 +1,9 @@
 ARP SPOOFER (RUN ON TERMINAL IN DEBIAN LINUX (i.e. KALI))
 ----------------------------------------------------------------------------------------------------------------------------
+
+
 MAIN IDEA OF THE PROJECT:
+-------------------------
 To create a spoofer that can intercept request and responses between a machine and a router using the ARP protocol
 
 PURPOSE:
@@ -26,8 +29,11 @@ ARP has some security issues:
   - This allows us to access a clients vunerability
   
 2.Clients trust response without any verification
------------------------------------------------------------------------------------------------------------------------------
+
+
+
 CODE AND TOOLS OVERVIEW:
+------------------------
   Methods:
   
   spoof(target_ip,spoof_ip): Method that creates a spoof packet and sends it to other machine
