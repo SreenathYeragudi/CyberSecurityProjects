@@ -10,7 +10,9 @@ Allows for a hacker to store data and is commonly used in a "Man-in-the-Middle" 
 I wanted to keep track of urls that a user is accessing on a machine as well as Username and Password logins
 
 **Stipulations**
+
 This Sniffer is utilized for http websites only as of now ....
+
 ---
 To run this "Man-in-the-Middle"  attack first
 
