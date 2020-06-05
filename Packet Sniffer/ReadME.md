@@ -14,7 +14,7 @@ This Sniffer is utilized for http websites only as of now ....
 ---
 To run this "Man-in-the-Middle"  attack first
 
-    1. Run the arp_spoofer program to establish the "Man-in-the-Middle" connection
+    1. Run the arp_spoofer (FILES IN OTHER PROJECT) program to establish the "Man-in-the-Middle" connection
     2. Run the packet_sniffer in tandem as the arp_spoofer will allow you the connection
 ---
 To allow packet forwarding from your Dabien Linux Terminal use the command:
@@ -50,7 +50,7 @@ get_login(packet):
 
 process_sniffed_packet(packet):
 
-    -accpets the packets from the callback of sniff(interface)
+    -accepets the packets from the callback of sniff(interface)
     -searches packet for http layer using packet.haslayer(http.HTTPRequest)
     -calls the getUrl(packet) and stores its information tracking every url accessed by external machine
     -calls get_login(packet)
@@ -61,7 +61,7 @@ process_sniffed_packet(packet):
 # Disclaimer
 **Notice**
 
-    This program is run on my own virtual box machines and set up. The code in this project can be and should be editied to fit you ip and mac address specifications. Ideal set up is necessary for proper efficeny.
+    This program is run on my own virtual box machines and set up. The code in this project can be and should be editied to fit your ip and mac address specifications. Ideal set up is necessary for proper efficeny.
 ---
 ***WARNING***
 
