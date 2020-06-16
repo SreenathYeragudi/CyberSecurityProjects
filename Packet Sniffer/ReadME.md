@@ -20,6 +20,7 @@ To run this "Man-in-the-Middle"  attack first
     2. Run the packet_sniffer in tandem as the arp_spoofer will allow you the connection
 ---
 To allow packet forwarding from your Dabien Linux Terminal use the command:
+
     echo 1 > /proc/sys/net/ipv4/ip_forward
 ---
 # Code and Tools
