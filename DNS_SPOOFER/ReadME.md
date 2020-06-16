@@ -9,6 +9,7 @@ A computer program that can spoof a web server DNS and send fake websites and in
 I wanted to utilize a man in the middle attack so that I could pass my own custom information to a victim
 
 **Stipulations**
+
 This Spoofer is written on python 2.7 and the netfilterqueue is native to python 2.7
 ---
 To run this DNS SPOOFER  first
