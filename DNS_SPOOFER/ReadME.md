@@ -13,6 +13,7 @@ This Spoofer is written on python 2.7 and the netfilterqueue is native to python
 ---
 To run this DNS SPOOFER  first
     1.)
+        
         FOR LOCAL BROWSER DO THIS:
         
         1.iptables -I OUTPUT -j NFQUEUE --queue-num 0
