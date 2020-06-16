@@ -14,6 +14,7 @@ This Interceptor is written on python 2.7 and the netfilterqueue is native to py
 ---
 To run this Interceptor  first
     1.)
+    
         FOR LOCAL BROWSER DO THIS:
         
         1.iptables -I OUTPUT -j NFQUEUE --queue-num 0
@@ -34,7 +35,9 @@ To allow packet forwarding from your Dabien Linux Terminal use the command:
 # Code and Tools
 **Code Breakdown**
  I created these methods:
+ 
     1. process_packet(packet) ----> processes captured by the packet and uses it to send custom file
+    
     2.set_load(packet,load) ---> set load for custom file
     
 ---
