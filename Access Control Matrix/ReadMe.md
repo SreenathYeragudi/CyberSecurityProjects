@@ -17,14 +17,16 @@ design and implement an authentication and access control (authorization) librar
   The username cannot be an empty string. The password may be an empty string.
 
 #### Test program:
-  'auth AddUser myname mypassword'
+ python3 auth.py AddUser myname mypassword
+  
   ---------------------------------
  ### Authenticate(“user”, “password”)
     Validate a user’s password by passing the username and password, both strings.
 
 #### Test program:
 
-  auth Authenticate myname mypassword
+  python3 auth.py Authenticate myname mypassword
+  
   ------------------------------------
 ### SetDomain(“user”, “domain”)
   Assign a user to a domain. Think of it as adding a user to a group.
@@ -37,7 +39,8 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth SetDomain user domain_name
+  python3 auth.py SetDomain user domain_name
+  
  ------------------------------------------
 ### DomainInfo(“domain”)
   List all the users in a domain.
@@ -46,7 +49,8 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth DomainInfo domain_name
+  python3 auth.py DomainInfo domain_name
+  
 -------------------------------------------
 ### SetType(“objectname”, “type”)
   Assign a type to an object. You can think of this as adding an object to a group of objects of the same type.
@@ -57,7 +61,8 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth SetType object type_name
+  python3 auth.py SetType object type_name
+  
  ----------------------------------------
 ### TypeInfo(“type”)
   List all the objects that have a specific type, one per line.
@@ -66,7 +71,8 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth TypeInfo type_name
+  python3 auth.py TypeInfo type_name
+  
 -----------------------------------------
 ### AddAccess(“operation”, “domain_name”, “type_name”)
   Define an access right: a string that defines an access permission of a domain to an object. The access permission can be any arbitrary string that makes sense to the service.
@@ -79,7 +85,8 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth AddAccess operation domain_name type_name
+  python3 auth.py AddAccess operation domain_name type_name
+  
 ---------------------------------------------------
 ### CanAccess(“operation”, “user”, “object”)
   Test whether a user can perform a specified operation on an object.
@@ -95,7 +102,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  auth CanAccess operation user object
+  python3 auth.py CanAccess operation user object
   
   The program will check whether the user is allowed to perform the specified operation on the object. That means that there exists a valid access right for an operation in some (domain, type) where the user is in domain and the object is in the corresponding type.
   
