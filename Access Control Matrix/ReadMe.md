@@ -24,6 +24,7 @@ design and implement an authentication and access control (authorization) librar
     Validate a user’s password by passing the username and password, both strings.
 
 #### Test program:
+------------------
 
   python3 auth.py Authenticate myname mypassword
   
