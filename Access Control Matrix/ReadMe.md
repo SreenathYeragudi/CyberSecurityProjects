@@ -10,21 +10,19 @@ This is a problem that affects many services.
 ## Purpose:
 design and implement an authentication and access control (authorization) library that can be used by services that need to rely on their own set of users rather than those who have accounts on the computer and manage their own sets of objects and operations on those objects.
 
-##Feautres:
+## Feautres:
 ### AddUser(“user”, “password”)
   Define a new user for the system along with the user’s password, both strings.
 
   The username cannot be an empty string. The password may be an empty string.
 
-#### Test program:
+** #### Test program:
  python3 auth.py AddUser myname mypassword
   
   ---------------------------------
- ** ### Authenticate(“user”, “password”) ** 
+ ### Authenticate(“user”, “password”) 
     Validate a user’s password by passing the username and password, both strings.
-
-** #### Test program: **
-
+** #### Test program: 
 
   python3 auth.py Authenticate myname mypassword
   
@@ -38,7 +36,7 @@ design and implement an authentication and access control (authorization) librar
 
   The domain name must be a non-empty string.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py SetDomain user domain_name
   
@@ -48,7 +46,7 @@ design and implement an authentication and access control (authorization) librar
 
   The group name must be a non-empty string.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py DomainInfo domain_name
   
@@ -60,7 +58,7 @@ design and implement an authentication and access control (authorization) librar
 
   The object can be any non-null string.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py SetType object type_name
   
@@ -70,7 +68,7 @@ design and implement an authentication and access control (authorization) librar
 
   The type name must be a non-empty string.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py TypeInfo type_name
   
@@ -84,7 +82,7 @@ design and implement an authentication and access control (authorization) librar
 
   This is the key function that builds the access control matrix of domains and types.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py AddAccess operation domain_name type_name
   
@@ -101,7 +99,7 @@ design and implement an authentication and access control (authorization) librar
   return false
   That is, find all domains for the user and find all types for the object. Then see if any of those domain-type combinations have the desired operation set.
 
-#### Test program:
+** #### Test program:
 
   python3 auth.py CanAccess operation user object
   
