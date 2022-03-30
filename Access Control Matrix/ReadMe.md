@@ -24,7 +24,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth Authenticate myname mypassword'
+  auth Authenticate myname mypassword
   ------------------------------------
 ### SetDomain(“user”, “domain”)
   Assign a user to a domain. Think of it as adding a user to a group.
@@ -37,7 +37,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth SetDomain user domain_name'
+  auth SetDomain user domain_name
  ------------------------------------------
 ### DomainInfo(“domain”)
   List all the users in a domain.
@@ -46,7 +46,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth DomainInfo domain_name'
+  auth DomainInfo domain_name
 -------------------------------------------
 ### SetType(“objectname”, “type”)
   Assign a type to an object. You can think of this as adding an object to a group of objects of the same type.
@@ -57,7 +57,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth SetType object type_name'
+  auth SetType object type_name
  ----------------------------------------
 ### TypeInfo(“type”)
   List all the objects that have a specific type, one per line.
@@ -66,7 +66,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth TypeInfo type_name'
+  auth TypeInfo type_name
 -----------------------------------------
 ### AddAccess(“operation”, “domain_name”, “type_name”)
   Define an access right: a string that defines an access permission of a domain to an object. The access permission can be any arbitrary string that makes sense to the service.
@@ -79,7 +79,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth AddAccess operation domain_name type_name'
+  auth AddAccess operation domain_name type_name
 ---------------------------------------------------
 ### CanAccess(“operation”, “user”, “object”)
   Test whether a user can perform a specified operation on an object.
@@ -95,7 +95,7 @@ design and implement an authentication and access control (authorization) librar
 
 #### Test program:
 
-  'auth CanAccess operation user object'
+  auth CanAccess operation user object
   
   The program will check whether the user is allowed to perform the specified operation on the object. That means that there exists a valid access right for an operation in some (domain, type) where the user is in domain and the object is in the corresponding type.
   
