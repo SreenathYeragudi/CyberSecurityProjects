@@ -20,11 +20,11 @@ design and implement an authentication and access control (authorization) librar
  python3 auth.py AddUser myname mypassword
   
   ---------------------------------
- ### Authenticate(“user”, “password”)
+ ** ### Authenticate(“user”, “password”) ** 
     Validate a user’s password by passing the username and password, both strings.
 
-#### Test program:
-------------------
+** #### Test program: **
+
 
   python3 auth.py Authenticate myname mypassword
   
