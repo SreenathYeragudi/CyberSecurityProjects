@@ -1,0 +1,134 @@
+#!/usr/bin/python3
+import sys
+import os
+
+def largest_bitsize(n):
+    return 2**n - 1
+
+# sbdm formula
+def sbdm(passwrd):
+    hash=0 
+    c = 0
+    for char in passwrd:
+        #set char to Unicode value
+        c = ord(char)
+        hash = c + (hash << 6) + (hash << 16) - hash
+    # necessary to mod by this max bitsize value in python
+    hash=hash % (largest_bitsize(64) + 1)
+    return hash
+# creating linear congruential
+def create_lin_cong(x_n):
+    a=1103515245 
+    c=12345
+    m=256
+    return( (a*x_n)+c)%m
+#Setting up IV VECTOR
+def init_vector(seed):
+    init_vector = []
+    #initial value to be stored
+    init_number = create_lin_cong( seed )
+    init_vector.append( init_number )
+    #store the init_number in the init_vector for CBC to the first block
+    for i in range(15):
+        init_number = create_lin_cong( init_number )
+        init_vector.append( init_number )
+    return init_vector
+# padding
+def decrypt_padding( message ):
+    #Reverse of padding for encryption
+    # stores the value stored in  the padded blocks
+    pad_value = message[-1]
+    arr = []
+    #Start from the back of the message
+    for i in range(15, -1, -1 ):
+        #if the value isn't the pad_value or if i is less than 16 - pad_value
+        #insert each value of the message into the array
+        if message[i] != pad_value or i < 16 - pad_value:
+            #put in array 
+            arr.insert(0, message[i])
+    return bytes(arr)
+def swap(block,first,second):
+     tmp=block[first]
+     block[first]=block[second]
+     block[second]=tmp
+# byte shuffling
+def byte_shuffling(block, key_stream):
+    block= list(block)
+    for i in range(15,-1,-1 ):
+        first = key_stream[i] & (15)
+        second = (key_stream[i] >> 4) & (15)
+        #exchanging bytes
+        swap(block,first,second)
+    return bytes(block)
+def CBC(p,c):
+    arr = []
+    #for the length of the plain text
+    for i in range(len(p)):
+        #XOR the values and append to an array
+        arr.append( p[i] ^ c[i] )
+    return bytes(arr)
+def input_config():
+    #checks if arguments are of size
+    if len(sys.argv) != 4:
+            print("NEED 4 args")
+            return -1
+def main():
+    input_config()
+    pwd = sys.argv[1]
+    #read bytes
+    init_file = open(sys.argv[2], "rb")
+    #write bytes
+    term_file = open(sys.argv[3], "wb+")
+    if not init_file:
+        print("File DNE")
+        return -1
+    #Initialzation Vector
+    IV = init_vector(sbdm( pwd ))
+    previous_message_block=None
+    reading_files = True
+    first_block = True
+    cipher = []
+    # calculate total num of bytes in file
+    plain_Text_bytes = os.path.getsize(sys.argv[2])
+    message_bytes_seen = 0
+    # read data block by block
+    while reading_files:
+        # Read in 16 bytes to message
+        message = init_file.read( 16)
+        #count the number of bytes read
+        message_bytes_seen += len(message)
+        #Do opposite of encrypt interms of XORing
+        if not first_block:
+            #Read bytes into the keystream
+            key_stream = init_vector( key_stream[-1] )
+            XORed = CBC( message, key_stream )
+        else:
+            #Read bytes into keystream from Initalized Vector
+            key_stream = init_vector( IV[-1] )
+            # xor plain and key stream
+            XORed = CBC( message, key_stream )
+        
+        #BYTE SHUFFLE the XORed with the key_stream
+        swap = byte_shuffling(XORed, key_stream )
+
+        if not first_block:
+            #if its not the first block, do CBC on the swap and the previous message to get cipher
+            cipher = CBC(swap, previous_message_block)
+        else:
+            #if its the first block, to get cipher, do CBC on the swap and IV 
+            first_block = False
+            cipher = CBC(swap, IV)
+         #If all the bytes of the file are read
+        if message_bytes_seen == plain_Text_bytes:
+            # Deal with the padding of the cipher blocks
+            cipher = decrypt_padding( cipher )
+            reading_files = False
+        #At the end of each message save it as the previous block 
+        previous_message_block = message
+        term_file.write( cipher )
+    
+    init_file.close()
+    term_file.close()
+
+if __name__ == "__main__":
+    main()

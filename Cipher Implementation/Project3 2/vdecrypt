@@ -1,0 +1,55 @@
+#!/usr/bin/python3
+import sys
+
+def input_config():
+    #checks if arguments are of size
+    if len(sys.argv) != 4:
+            print("NEED 4 args")
+            return
+def int_to_byte(text,order,l):
+    return int.to_bytes(text,byteorder=order,length=l)
+def int_from_byte(text,order):
+    return (int.from_bytes(text,byteorder=order))
+def main():
+    input_config()
+    # read in binary
+    key_file = open(sys.argv[1], "rb")
+    cipher_file = open(sys.argv[2], "rb")
+    #write to in binary
+    plain_file = open(sys.argv[3], "wb+")
+     #if files do not exist or cannot be open
+    if not (plain_file and cipher_file):
+        print("Error with files: NOT OPENING")
+        return
+    # DECRYPTION MECHANISMS
+    while not False:
+        #read bytes from cipher_file
+        cipher_text = cipher_file.read(1)
+        #if done break
+        if not cipher_text:
+            break
+        if key_file:
+            #read bytes from keyfile
+            key_text = key_file.read(1)
+            #if done
+            if not key_text:
+                #reset offset back to 0
+                key_file.seek(0)
+                key_text = key_file.read(1)
+        else:
+            key_text = 0
+        #set cipher file bytes to int
+        cipher_text_byte = int_from_byte(cipher_text,sys.byteorder)
+        #set keyfile bytes to int
+        key_text_byte = int_from_byte(key_text,sys.byteorder)
+        #Reverse engineer cipher rules, by subtracting cipher int by key int
+        #then adding 256 and then moding by 256
+        plain_text=(cipher_text_byte-key_text_byte+256)%256
+        #write to file
+        plain_file.write(int_to_byte(plain_text,sys.byteorder,1))
+    key_file.close()
+    plain_file.close()
+    key_file.close()
+
+if __name__ == "__main__":
+    main()

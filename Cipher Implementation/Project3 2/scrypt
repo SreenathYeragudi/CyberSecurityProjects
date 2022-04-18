@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+import sys
+def largest_bitsize(n):
+    return 2**n - 1
+
+# sbdm formula
+def sbdm(passwrd):
+    hash=0 
+    c = 0
+    for char in passwrd:
+        #set char to Unicode value
+        c = ord(char)
+        hash = c + (hash << 6) + (hash << 16) - hash
+    # necessary to mod by this max value in python
+    hash=hash % (largest_bitsize(64) + 1)
+    return hash
+# creates linear congruential 
+def create_lin_cong(x_n):
+    a=1103515245 
+    c=12345
+    m=256
+    return((a*x_n)+c)%m
+def input_config():
+    #checks if arguments are of size
+    if len(sys.argv) != 4:
+            print("NEED 4 args")
+            return -1
+def int_from_byte(text,order):
+    return (int.from_bytes(text,byteorder=order))
+def int_to_byte(text,order,l):
+    return int.to_bytes(text,byteorder=order,length=l)
+def main():
+    input_config()
+    passwrd = sys.argv[1]
+    # read file in binary
+    init_file = open(sys.argv[2], "rb")
+    #write to file in binary
+    term_file = open(sys.argv[3], "wb+")
+    if not init_file:
+        print("File DNE ")
+        return -1
+    #pass seed to linear congruential
+        #seed is calculated by sbdm(passwrd)
+    key = create_lin_cong(sbdm(passwrd))
+    #STREAM CIPHER MECHANISMS
+    while not False:
+        #byte of the  int file
+        plain = init_file.read(1)
+        if not plain:
+            break
+        #byte of plaintext is XORed with the next byte from the keystream and writen to the next file
+        term_file.write( int_to_byte((int_from_byte(plain,sys.byteorder)^ key),sys.byteorder,1))
+        #Assign linear congruential to the key
+        key = create_lin_cong(key)
+    init_file.close()
+    term_file.close()
+
+if __name__ == "__main__":
+    main()

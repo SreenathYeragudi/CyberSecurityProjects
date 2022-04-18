@@ -1,0 +1,55 @@
+#!/usr/bin/python3
+import sys
+def input_config():
+    #checks if arguments are of size
+    if len(sys.argv) != 4:
+            print("Wrong # of arguments")
+            return
+def int_to_byte(text,order,l):
+    return int.to_bytes(text,byteorder=order,length=l)
+def int_from_byte(text,order):
+    return (int.from_bytes(text,byteorder=order))
+def main():
+    input_config()
+    #opens files and reads in binary
+    key_file = open(sys.argv[1], "rb")
+    plain_file = open(sys.argv[2], "rb")
+    #writes to file in binary
+    cipher_file = open(sys.argv[3], "wb+")
+    #if files do not exist or cannot be open
+    if not (plain_file and cipher_file):
+        print("Error with files: NOT OPENING")
+        return
+    #ENCRYPTION MECHANISMS
+    while not False:
+        #read input from plain_file 1 by 1
+        plain_txt = plain_file.read(1)
+        # if no more then break
+        if not plain_txt:
+            break 
+        if key_file:
+            #Now read keyfile inputs 1 by 1
+            key_txt = key_file.read(1)
+            #if done
+            if not key_txt:
+                #set offset back to 0
+                key_file.seek(0)
+                # read from start
+                key_txt = key_file.read(1)
+        else:
+            key_txt = 0
+        #transfer plain text bytes into integer
+        plain_txt_byte = int_from_byte(plain_txt,sys.byteorder)
+        #transfer key text bytes into integer
+        key_txt_byte=int_from_byte(key_txt,sys.byteorder)
+        #add them and mod them by 256 as per cipher rules
+        cipher_text=(plain_txt_byte+key_txt_byte)%256
+        #write the findings to the cipher file
+        cipher_file.write(int_to_byte(cipher_text,sys.byteorder,1))
+    key_file.close()
+    plain_file.close()
+    key_file.close()
+
+if __name__ == "__main__":
+    main()
+

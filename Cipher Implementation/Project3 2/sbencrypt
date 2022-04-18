@@ -1,0 +1,144 @@
+#!/usr/bin/python3
+import sys
+
+def largest_bitsize(n):
+    return 2**n - 1
+
+# sbdm formula
+def sbdm(passwrd):
+    hash=0 
+    c = 0
+    for char in passwrd:
+        #set char to Unicode value
+        c = ord(char)
+        hash = c + (hash << 6) + (hash << 16) - hash
+    # necessary to mod by this max bitsize value in python
+    hash=hash % (largest_bitsize(64) + 1)
+    return hash
+
+# creating linear congruential
+def create_lin_cong(x_n):
+    a=1103515245 
+    c=12345
+    m=256
+    return( (a*x_n)+c)%m
+
+#Setting up IV VECTOR
+def init_vector(seed):
+    init_vector = []
+    #initial value to be stored
+    init_number = create_lin_cong( seed )
+    init_vector.append( init_number )
+    #store the init_number in the init_vector for CBC to the first block
+    for i in range(15):
+        init_number = create_lin_cong( init_number )
+        init_vector.append( init_number )
+    return init_vector
+
+# padding
+def padding(message):
+    leftover=16 - len(message)
+    #check if message is empty
+    if len(message) == 0:
+        # if its empty return the block with all the padding
+        padded_arr = []
+        #ADD the 16 padding blocks
+        for i in range( 16):
+            padded_arr.append(16)
+        message = bytes(padded_arr)
+        return message
+    else:
+        #PADDING FOR WHEN THERE ARE LEFTOVER BLOCKS AFTER STORING MESSAGE
+        padded_arr = []
+        #if there is a character in the message, then add it to the 16 byte block
+        for i in message:
+            padded_arr.append(i)
+        #If space remaining in the 16 byte block
+        for i in range(leftover):
+            padded_arr.append(leftover)
+        message = bytes(padded_arr)
+        return message
+
+def swap(block,first,second):
+     tmp=block[first]
+     block[first]=block[second]
+     block[second]=tmp
+
+# Byte Shuffling
+def byte_shuffling(block, key_stream):
+    block= list(block)
+    for i in range( 16 ):
+        first = key_stream[i] & (15)
+        second = (key_stream[i] >> 4) & (15)
+        #exchanging bytes
+        swap(block,first,second)
+    return bytes(block)
+
+def CBC(p,c):
+    arr = []
+    #for the length of the plain text
+    for i in range(len(p)):
+        #XOR the values and append to an array
+        arr.append( p[i] ^ c[i] )
+    return bytes(arr)
+
+def input_config():
+    #checks if arguments are of size
+    if len(sys.argv) != 4:
+            print("NEED 4 args")
+            return -1
+
+def main():
+    input_config()
+    pwd = sys.argv[1]
+    # read in bytes
+    init_file = open(sys.argv[2], "rb")
+    # write bytes
+    term_file = open(sys.argv[3], "wb+")
+    
+    #if the init_file doesn't exist
+    if not init_file:
+        print("File DNE")
+        return -1
+
+    # 0. Setting up INIT VECTOR
+    IV = init_vector(sbdm( pwd ))
+    reading_files = True
+    first_block = True
+    cipher_block= []
+    # read from the init file by each block
+    while reading_files :
+        # Load 16 bytes from the initial file into the message
+        message = init_file.read( 16 )
+        # 1.If it is the last block, add padding
+        if len( message ) != 16:
+            #Start the padding for the message blocks
+            message = padding( message )
+            #change flag
+            reading_files = False
+        #2. CBC
+        #IF not first block
+        if not first_block:
+            # XOR with cipher text
+            XORed = CBC( message, cipher_block)
+            #read bytes into keystream
+            key_stream = init_vector( key_stream[-1] )
+        else:
+            #if first block,set flag
+            first_block = False
+            # XOR with the init vector
+            XORed = CBC( message, IV )
+            #read bytes into keystream
+            key_stream = init_vector( IV[-1] )
+        #4. BYTE SHUFFLE the XORed with the key_stream
+        swap = byte_shuffling( XORed, key_stream )
+        # 5.ciphertext_block_i = temp_block_i XOR keystream_i.
+        cipher_block = CBC( swap, key_stream )
+        #6.write cipher
+        term_file.write( cipher_block )
+    
+    init_file.close()
+    term_file.close()
+
+if __name__ == "__main__":
+    main()
