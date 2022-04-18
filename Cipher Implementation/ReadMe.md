@@ -1,6 +1,9 @@
 ## GOAL:
   1.implement a binary version of the Vigenère polyalphabetic substitution cipher.
+  
   2.implement a stream cipher that uses a linear congruential keystream generator and a hashed key as a seed.
+  
+  
   3.perate as a block cipher that will shuffle pairs of bytes within each block based on the keystream and will apply cipher block chaining (CBC) between blocks.
 
 ## BINARY CIPHER
