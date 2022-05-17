@@ -1,0 +1,120 @@
+#!/usr/bin/python3 
+import hashlib
+import sys
+import time
+import math
+import string
+import itertools
+
+
+
+
+
+#makes hash into a binary string
+def seperate_bin(hash_message):
+    string=""
+    for char in hash_message:
+        if char.isdigit():
+            t='{0:04b}'.format(int(char))
+            string+=str(t)
+        else:
+            asc="{0:04b}".format(int(char,16))
+            string+=asc
+    return string
+#calculates leading zeros
+def findLeadingZeros(new_hash):
+    leading=0
+    new_hash= str(seperate_bin(new_hash))
+    for char in new_hash:
+        if char=='0':
+            leading+=1
+        else:
+            break
+    return leading
+#checks the number of zeros match
+def checkZeros(hash_message,nbits):
+    number_of_binzeros=math.ceil(nbits/4)
+    hash_message= str(seperate_bin(hash_message))
+    default='0'*nbits
+    if hash_message.startswith(default):
+        return True
+    return False
+#Uses the hashlib to do sha256 and returns a converted hex string
+def hash_message(message):
+    message_hash = hashlib.sha256()
+    message_hash.update(message)
+    return message_hash.hexdigest()
+#generates infinite ascii sets
+def letter_sets(alphabet, start=1, max_str_length=float("inf")):
+    while start <= max_str_length:
+        for group in itertools.combinations(alphabet, start):
+            yield "".join(group)
+        start += 1
+
+#creates proof of work
+def create_POW(nbits,hashed):
+    iterations=0
+    new_message_hashed=hashed
+    work=''
+    i=300
+    asc_all=string.ascii_lowercase+string.ascii_uppercase+string.punctuation
+    #Remove all quote types
+    asc_all=asc_all.translate({ord('\"'): None})
+    asc_all=asc_all.replace(asc_all[len(asc_all)-5],"")
+    asc_all=asc_all.translate({ord('\''): None})
+    if checkZeros(new_message_hashed,nbits):
+        return work,new_message_hashed,iterations
+    else:
+        for s in letter_sets(asc_all):
+            temp=hashed+''.join(s)
+            new_message_hashed=hash_message(str.encode(temp))
+            iterations+=1
+            if checkZeros(new_message_hashed,nbits):
+                work=s
+                break
+    return work,new_message_hashed,iterations 
+   
+def main():
+    #Check the args, the nbits, and the file
+    if len(sys.argv)!=3:
+        print("Wrong number of arguments")
+        return -1
+
+    if int(sys.argv[1]) <0:
+         print("Need Proper input")
+         return -1
+    else:
+        nbits= int(sys.argv[1])
+
+    file = open(sys.argv[2], 'rb')
+    if not file:
+        print('File cannot open')
+        return -1
+    else:
+        input_file,fileName=file,sys.argv[2]
+
+    message=input_file.read()
+
+    #1.Create the SHA-256 Hash
+    #2. return hex string
+    sha_hash=hash_message(message)
+
+    #3.create POF
+    starting_time=time.time()
+    work,new_hash,iterations=create_POW(nbits,sha_hash)
+    
+    leading_zeros=findLeadingZeros(new_hash)
+    final_time=time.time()-starting_time
+
+    print('File: {}'.format( fileName ))
+    print('Initial-hash: {}'.format( sha_hash ))
+    print('Proof-of-work: {}'.format( "".join(work) ))
+    print('Hash: {}'.format( new_hash ))
+    print('Leading-bits: {}'.format( leading_zeros))
+    print('Iterations: {}'.format( iterations ))
+    print('Compute-time: {}'.format( final_time ))
+
+    input_file.close()
+
+if __name__ == "__main__":
+    main()
