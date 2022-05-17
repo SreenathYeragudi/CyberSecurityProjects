@@ -1,0 +1,145 @@
+#!/usr/bin/python3 
+import hashlib
+import re
+import sys
+
+#makes hash into a binary string
+def seperate_bin(hash_message):
+    string=""
+    for char in hash_message:
+        if char.isdigit():
+            t='{0:04b}'.format(int(char))
+            string+=str(t)
+        else:
+            asc="{0:04b}".format(int(char,16))
+            string+=asc
+    return string
+#calculates leading zeros
+def findLeadingZeros(new_hash):
+    leading=0
+    new_hash= str(seperate_bin(new_hash))
+    for char in new_hash:
+        if char=='0':
+            leading+=1
+        else:
+            break
+    return leading
+#Do the hash
+def hash_message(message):
+    message_hash = hashlib.sha256()
+    message_hash.update(message)
+    return message_hash.hexdigest()
+#check if the given values exist
+def check_values(initial_hash,pow,hash,lzb):
+    if not initial_hash:
+        print('Initial Hash not given')
+        return -1
+    
+    if not pow:
+        print("Proof of Work not given")
+        return -1
+
+    if not hash:
+        print('Hash not given')
+        return -1
+
+    if not lzb:
+        print('Leading-zero-bits not given')
+        return -1
+#parse the header file
+def parse_header(header_file):
+    initial_hash=''
+    pow=''
+    hash=''
+    lzb=''
+    for input in header_file:
+        if 'Initial-hash:' in input:
+            initial_hash=re.split(':', input)[-1]
+            initial_hash=initial_hash.strip()
+        if 'Proof-of-work:' in input:
+            pow=re.split(':', input)[-1]
+            pow=pow.strip()
+        if 'Hash:' in input:
+            hash=re.split(':', input)[-1]
+            hash=hash.strip()
+        if 'Leading-zero-bits:' in input:
+            lzb=re.split(':', input)[-1]
+            lzb=lzb.strip()
+
+    return initial_hash,pow,hash,lzb
+        
+
+def main():
+    fail=False
+    #Check the args, the nbits, and the file
+    if len(sys.argv)!=3:
+        print("Wrong number of arguments")
+        return -1
+    header = open(sys.argv[1], 'r')
+    if not header:
+        print('File cannot open')
+        return -1
+    else:
+        header_file,headerName=header,sys.argv[1]
+    text = open(sys.argv[2], 'rb')
+    if not text:
+        print('File cannot open')
+        return -1
+    else:
+        text_file,textName=text,sys.argv[2]
+    message = text_file.read()
+
+    #does the intital message hashing from the text_file
+    initial_message_hash = hash_message(message)
+    #parses the necessary info from the header_file
+    initial_header_hash,pow,hash,lzb=parse_header(header_file)
+    #checks if values needed exist
+    #check_values(initial_header_hash,pow,hash,lzb)
+    #calculate new hash with header hash and header pow
+    new_hash=hash_message(str.encode(initial_message_hash+pow))
+    #check if the initial hashes match
+    if initial_message_hash != initial_header_hash:
+        if initial_header_hash=="":
+            print('ERROR:missing Initial-hash in header')
+        else:
+            print('ERROR: initial hashes do not match')
+            print('\thash in header:{}'.format(initial_header_hash))
+            print('\tfile hash:{}'.format(initial_message_hash))
+        fail=True
+    else:
+        print('PASSED: initial file hashes match')
+
+    #get the leading bits
+    text_lzb=findLeadingZeros(new_hash)
+    if len(lzb)!=0:
+        if text_lzb != int(lzb):
+            print('ERROR:incorrect Leading-bits value:{}, expected {}'.format(lzb,text_lzb))
+            fail=True
+        else:
+            print("PASSED: leading bits is correct")
+    else:
+        if lzb=="":
+            print('ERROR:missing header leading bits')
+
+    
+    #check if the new_hash and header hash are the same
+    if new_hash != hash:
+        if hash=="":
+            print('ERROR:missing header hash')
+        else:
+            print('ERROR:pow hash does not match Hash header')
+            print('\texpected:{}'.format(new_hash))
+            print('\theader hash:{}'.format(hash))
+        fail=True
+    else:
+        print("PASSED: pow hash matches Hash header")
+
+    #Do all checks if everything good then pass
+    if fail==False:
+        print("pass")
+    else:
+        print("fail")
+    return 0
+    
+if __name__ == "__main__":
+    main()
